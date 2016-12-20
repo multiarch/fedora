@@ -1,5 +1,4 @@
-#!/bin/bash
-set -e
+#!/bin/bash -xe
 
 mysha256sum=sha256sum
 if which gsha256sum &> /dev/null; then
@@ -28,9 +27,9 @@ for version in "${versions[@]}"; do
 	qemu_arch="$(cat qemu_arch 2>/dev/null || true)"
 	rootTar="Fedora-Docker-Root-$v.$arch.tar"
 	baseUrl="https://download.fedoraproject.org/pub"
-	if wget -4q --spider "$baseUrl/fedora-secondary/releases/$v/Docker/$arch/images"; then
+	if wget --timeout=10 -4q --spider "$baseUrl/fedora-secondary/releases/$v/Docker/$arch/images"; then
 		baseUrl+="/fedora-secondary/releases/$v/Docker/$arch/images"
-	elif wget -4q --spider "$baseUrl/fedora/linux/releases/$v/Docker/$arch/images"; then
+	elif wget --timeout=10 -4q --spider "$baseUrl/fedora/linux/releases/$v/Docker/$arch/images"; then
 		baseUrl+="/fedora/linux/releases/$v/Docker/$arch/images"
 	else
 		echo >&2 "error: Unable to find correct base url"
@@ -38,7 +37,7 @@ for version in "${versions[@]}"; do
 	fi
 	
 	for update in 5 4 3 2 1 0; do
-		if wget -4q --spider "$baseUrl/Fedora-Docker-Base-$v-1.$update.$arch.tar.xz"; then
+		if wget -4q --timeout=10 --spider "$baseUrl/Fedora-Docker-Base-$v-1.$update.$arch.tar.xz"; then
 			fullTar="Fedora-Docker-Base-$v-1.$update.$arch.tar.xz"
 			checksum="Fedora-Docker-$v-1.$update-$arch-CHECKSUM"
 			break
