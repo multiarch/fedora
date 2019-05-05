@@ -1,7 +1,8 @@
+dist: xenial
 sudo: required
-
 services:
   - docker
+language: bash
 
 before_install:
   - docker run --rm --privileged multiarch/qemu-user-static:register

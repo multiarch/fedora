@@ -25,23 +25,26 @@ for version in "${versions[@]}"; do
 	v="$(cat version)"
 	arch="$(cat arch)"
 	qemu_arch="$(cat qemu_arch 2>/dev/null || true)"
-	rootTar="Fedora-Docker-Root-$v.$arch.tar"
+	rootTar="Fedora-Container-Root-$v.$arch.tar"
 	baseUrl="https://download.fedoraproject.org/pub"
-	if wget --timeout=10 -4q --spider "$baseUrl/fedora-secondary/releases/$v/Docker/$arch/images"; then
-		baseUrl+="/fedora-secondary/releases/$v/Docker/$arch/images"
-	elif wget --timeout=10 -4q --spider "$baseUrl/fedora/linux/releases/$v/Docker/$arch/images"; then
-		baseUrl+="/fedora/linux/releases/$v/Docker/$arch/images"
+	if wget --timeout=10 -4q --spider "$baseUrl/fedora-secondary/releases/$v/Container/$arch/images"; then
+		baseUrl+="/fedora-secondary/releases/$v/Container/$arch/images"
+	elif wget --timeout=10 -4q --spider "$baseUrl/fedora/linux/releases/$v/Container/$arch/images"; then
+		baseUrl+="/fedora/linux/releases/$v/Container/$arch/images"
 	else
 		echo >&2 "error: Unable to find correct base url"
 		exit 1
 	fi
 	
 	for update in 5 4 3 2 1 0; do
-		if wget -4q --timeout=10 --spider "$baseUrl/Fedora-Docker-Base-$v-1.$update.$arch.tar.xz"; then
-			fullTar="Fedora-Docker-Base-$v-1.$update.$arch.tar.xz"
-			checksum="Fedora-Docker-$v-1.$update-$arch-CHECKSUM"
-			break
-		fi
+		# 30-s390x only has the Minimal-Base image.
+		for base in Base Minimal-Base; do
+			if wget -4q --timeout=10 --spider "$baseUrl/Fedora-Container-${base}-$v-1.$update.$arch.tar.xz"; then
+				fullTar="Fedora-Container-${base}-$v-1.$update.$arch.tar.xz"
+				checksum="Fedora-Container-$v-1.$update-$arch-CHECKSUM"
+				break 2
+			fi
+		done
 	done
 	
 	if [ -z "$fullTar" ]; then
@@ -54,8 +57,10 @@ for version in "${versions[@]}"; do
 	wget -4qN "$baseUrl/$checksum" || true
 	wget -4N "$baseUrl/$fullTar"
 	if [ -f $checksum ]; then
-		if ! $mysha256sum --status -c $checksum; then
-			echo >&2 "error: '$thisTar' has invalid SHA256"
+		# Set ignore-missing to Ignore Fedora-Container-Minimal-Base-*.tar.gz
+		# in the checksum file.
+		if ! $mysha256sum --status -c --ignore-missing $checksum; then
+			echo >&2 "error: '$fullTar' has invalid SHA256"
 			exit 1
 		fi
 	fi
@@ -72,7 +77,7 @@ EOF
 
 	if [ -n "${qemu_arch}" ]; then
 		if [ ! -f x86_64_qemu-${qemu_arch}-static.tar.gz ]; then
-			wget -4N https://github.com/multiarch/qemu-user-static/releases/download/v2.7.0/x86_64_qemu-${qemu_arch}-static.tar.gz
+			wget -4N https://github.com/multiarch/qemu-user-static/releases/download/v3.1.0-3/x86_64_qemu-${qemu_arch}-static.tar.gz
 		fi
 		cat >> Dockerfile <<EOF
 
