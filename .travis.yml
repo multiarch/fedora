@@ -16,7 +16,7 @@ addons:
             - wget
 env:
     global:
-        - QEMU_VER=v3.1.0-3
+        - QEMU_VER=v4.0.0-2
         - DOCKER_SERVER=docker.io
         - DOCKER_REPO=$DOCKER_SERVER/multiarch/fedora
     matrix:
@@ -37,8 +37,13 @@ env:
 before_install:
     - docker run --rm --privileged multiarch/qemu-user-static:register
 
+install:
+    - |
+      make ARCH="${ARCH}" VERSION="${VERSION}" QEMU_ARCH="${QEMU_ARCH}" QEMU_VER="${QEMU_VER}" DOCKER_REPO="${DOCKER_REPO}"
+
 script:
-    - ./update.sh -a "$ARCH" -v "$VERSION" -q "$QEMU_ARCH" -u "$QEMU_VER" -d "$DOCKER_REPO"
+    - |
+      make test ARCH="${ARCH}" VERSION="${VERSION}" DOCKER_REPO="${DOCKER_REPO}"
 
 after_success:
     - |
