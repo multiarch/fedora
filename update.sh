@@ -46,7 +46,7 @@ if wget_and_sleep ${wget_spider_opts} "$baseUrl/fedora-secondary/releases/${VERS
 elif wget_and_sleep ${wget_spider_opts} "$baseUrl/fedora/linux/releases/${VERSION}/Container/${ARCH}/images"; then
     baseUrl+="/fedora/linux/releases/${VERSION}/Container/${ARCH}/images"
 elif wget_and_sleep ${wget_spider_opts} "$archiveBaseUrl/fedora/linux/releases/${VERSION}/Container/${ARCH}/images"; then
-    baseUrl=${archiveBaseUrl}+"/fedora/linux/releases/${VERSION}/Container/${ARCH}/images"
+    baseUrl="${archiveBaseUrl}/fedora/linux/releases/${VERSION}/Container/${ARCH}/images"
 else
     echo >&2 "error: Unable to find correct base url"
     exit 1
