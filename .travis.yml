@@ -34,6 +34,14 @@ env:
         - ARCH=aarch64 QEMU_ARCH=aarch64 VERSION=30
         - ARCH=s390x QEMU_ARCH=s390x VERSION=30
 
+        - ARCH=x86_64 QEMU_ARCH= VERSION=31
+        - ARCH=aarch64 QEMU_ARCH=aarch64 VERSION=31
+        - ARCH=s390x QEMU_ARCH=s390x VERSION=31
+
+        - ARCH=x86_64 QEMU_ARCH= VERSION=32
+        - ARCH=aarch64 QEMU_ARCH=aarch64 VERSION=32
+        - ARCH=s390x QEMU_ARCH=s390x VERSION=32
+
 before_install:
     - docker run --rm --privileged multiarch/qemu-user-static:register
 
