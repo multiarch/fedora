@@ -16,7 +16,7 @@ addons:
             - wget
 env:
     global:
-        - QEMU_VER=v4.0.0-5
+        - QEMU_VER=v5.1.0-2
         - DOCKER_SERVER=docker.io
         - DOCKER_REPO=$DOCKER_SERVER/multiarch/fedora
     matrix:
