@@ -40,10 +40,13 @@ rootTar="Fedora-Container-Root-${VERSION}.${ARCH}.tar"
 # to avoid redirected to an invalid mirror server that causes http status 404.
 # baseUrl="https://download.fedoraproject.org/pub"
 baseUrl="https://dl.fedoraproject.org/pub"
+archiveBaseUrl="https://archives.fedoraproject.org/pub/archive"
 if wget_and_sleep ${wget_spider_opts} "$baseUrl/fedora-secondary/releases/${VERSION}/Container/${ARCH}/images"; then
     baseUrl+="/fedora-secondary/releases/${VERSION}/Container/${ARCH}/images"
 elif wget_and_sleep ${wget_spider_opts} "$baseUrl/fedora/linux/releases/${VERSION}/Container/${ARCH}/images"; then
     baseUrl+="/fedora/linux/releases/${VERSION}/Container/${ARCH}/images"
+elif wget_and_sleep ${wget_spider_opts} "$archiveBaseUrl/fedora/linux/releases/${VERSION}/Container/${ARCH}/images"; then
+    baseUrl=${archiveBaseUrl}+"/fedora/linux/releases/${VERSION}/Container/${ARCH}/images"
 else
     echo >&2 "error: Unable to find correct base url"
     exit 1
