@@ -52,7 +52,7 @@ else
     exit 1
 fi
 
-for update in 6 5 4 3 2 1 0; do
+for update in {15..0}; do
     # 30-s390x only has the Minimal-Base image.
     for base in Base Minimal-Base; do
         if wget_and_sleep ${wget_spider_opts} "$baseUrl/Fedora-Container-${base}-${VERSION}-1.$update.${ARCH}.tar.xz"; then
