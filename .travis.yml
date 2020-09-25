@@ -16,24 +16,14 @@ addons:
             - wget
 env:
     global:
-        - QEMU_VER=v5.1.0-2
+        - QEMU_VER=v5.1.0-5
         - DOCKER_SERVER=docker.io
         - DOCKER_REPO=$DOCKER_SERVER/multiarch/fedora
     matrix:
         # Set available tar files
         # https://download.fedoraproject.org/pub/fedora/linux/releases/$VERSION/Container/$ARCH/images
         # https://download.fedoraproject.org/pub/fedora-secondary/releases/$VERSION/Container/$ARCH/images
-        - ARCH=armhfp QEMU_ARCH=arm VERSION=28
-
-        #- ARCH=x86_64 QEMU_ARCH= VERSION=29
-        #- ARCH=aarch64 QEMU_ARCH=aarch64 VERSION=29
-        #- ARCH=ppc64le QEMU_ARCH=ppc64le VERSION=29
-        #- ARCH=s390x QEMU_ARCH=s390x VERSION=29
-
-        - ARCH=x86_64 QEMU_ARCH= VERSION=30
-        - ARCH=aarch64 QEMU_ARCH=aarch64 VERSION=30
-        - ARCH=s390x QEMU_ARCH=s390x VERSION=30
-
+        
         - ARCH=x86_64 QEMU_ARCH= VERSION=31
         - ARCH=aarch64 QEMU_ARCH=aarch64 VERSION=31
         - ARCH=s390x QEMU_ARCH=s390x VERSION=31
