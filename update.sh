@@ -40,16 +40,19 @@ rootTar="Fedora-Container-Root-${VERSION}.${ARCH}.tar"
 # to avoid redirected to an invalid mirror server that causes http status 404.
 # baseUrl="https://download.fedoraproject.org/pub"
 baseUrl="https://dl.fedoraproject.org/pub"
+archiveBaseUrl="https://archives.fedoraproject.org/pub/archive"
 if wget_and_sleep ${wget_spider_opts} "$baseUrl/fedora-secondary/releases/${VERSION}/Container/${ARCH}/images"; then
     baseUrl+="/fedora-secondary/releases/${VERSION}/Container/${ARCH}/images"
 elif wget_and_sleep ${wget_spider_opts} "$baseUrl/fedora/linux/releases/${VERSION}/Container/${ARCH}/images"; then
     baseUrl+="/fedora/linux/releases/${VERSION}/Container/${ARCH}/images"
+elif wget_and_sleep ${wget_spider_opts} "$archiveBaseUrl/fedora/linux/releases/${VERSION}/Container/${ARCH}/images"; then
+    baseUrl="${archiveBaseUrl}/fedora/linux/releases/${VERSION}/Container/${ARCH}/images"
 else
     echo >&2 "error: Unable to find correct base url"
     exit 1
 fi
 
-for update in 5 4 3 2 1 0; do
+for update in {0..15}; do
     # 30-s390x only has the Minimal-Base image.
     for base in Base Minimal-Base; do
         if wget_and_sleep ${wget_spider_opts} "$baseUrl/Fedora-Container-${base}-${VERSION}-1.$update.${ARCH}.tar.xz"; then
