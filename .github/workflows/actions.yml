@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        QEMU_VER: [v6.0.0-1]
+        QEMU_VER: [v6.1.0-1]
         DOCKER_REPO: [docker.io/multiarch/fedora]
         LATEST_VERSION: [34]
         VERSION: [33, 34]
