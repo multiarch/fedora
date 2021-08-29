@@ -3,7 +3,7 @@
 # A POSIX variable
 OPTIND=1 # Reset in case getopts has been used previously in the shell.
 
-while getopts "a:v:q:u:d:" opt; do
+while getopts "a:v:q:u:d:t:" opt; do
     case "$opt" in
     a)  ARCH=$OPTARG
         ;;
@@ -14,6 +14,8 @@ while getopts "a:v:q:u:d:" opt; do
     u)  QEMU_VER=$OPTARG
         ;;
     d)  DOCKER_REPO=$OPTARG
+        ;;
+    t)  TAG_ARCH=$OPTARG
         ;;
     esac
 done
@@ -109,12 +111,12 @@ CMD ["/bin/bash"]
 EOF
 )
 
-docker build -t "${DOCKER_REPO}:${VERSION}-${ARCH}" .
-docker run -it --rm "${DOCKER_REPO}:${VERSION}-${ARCH}" bash -xc '
+docker build -t "${DOCKER_REPO}:${VERSION}-${TAG_ARCH}" .
+docker run --rm "${DOCKER_REPO}:${VERSION}-${TAG_ARCH}" /bin/bash -ec "
     uname -a
     echo
     cat /etc/os-release 2>/dev/null
     echo
     cat /etc/redhat-release 2>/dev/null
     true
-'
+"
